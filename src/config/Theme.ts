@@ -17,6 +17,7 @@ const light: Theme = merge(
       accent,
       background: Color.grey[1],
       content: Color.white[0],
+      drawer: Color.grey[2],
     },
   },
 );
@@ -32,6 +33,7 @@ const dark: Theme = merge(
       text: Color.grey[1],
       surface: Color.grey[9],
       content: Color.grey[7],
+      drawer: Color.grey[7],
     },
   },
 );

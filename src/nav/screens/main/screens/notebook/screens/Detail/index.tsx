@@ -51,6 +51,7 @@ const Detail = (props: DetailProps) => {
       <Drawer
         isDrawerOpenState={[isDrawerOpen, (bool) => navigation.setParams({ isDrawerOpen: bool })]}
         layout={layout}
+        drawerComponent={<Info element={element} screen={layout} />}
         mainComponent={(
           <>
             <Canvas
@@ -58,7 +59,7 @@ const Detail = (props: DetailProps) => {
               screen={layout}
               isExpand={isExpand}
             />
-            <TouchableOpacity
+            {/* <TouchableOpacity
               style={styles.arrowContainer}
               onPress={() => {
                 // LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
@@ -66,8 +67,8 @@ const Detail = (props: DetailProps) => {
               }}
             >
               <Icon.MaterialCommunityIcons name={isExpand ? 'arrow-collapse-all' : 'arrow-expand-all'} style={styles.arrowIcon} />
-            </TouchableOpacity>
-            {!isExpand && <Info element={element} screen={layout} />}
+            </TouchableOpacity> */}
+            {/* {!isExpand && <Info element={element} screen={layout} />} */}
           </>
         )}
       />

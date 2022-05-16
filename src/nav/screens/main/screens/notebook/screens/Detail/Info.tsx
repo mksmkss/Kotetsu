@@ -16,22 +16,21 @@ const { Text } = EPaper;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // alignItems: 'center',
-    // justifyContent: 'center',
+    // backgroundColor: 'red',
   },
   listscontainer: {
-    margin: 10,
-    borderRadius: 10,
+    // margin: 10,
+    // borderRadius: 10,
     paddingVertical: 5,
   },
   listcontainer: {
     alignItems: 'center',
-    paddingRight: 35, // いやだから、変えたい
     flexDirection: 'row',
     // borderWidth: 1,
   },
   tagContainer: {
     flexDirection: 'row',
+    paddingVertical: 2,
   },
   tag: {
     alignItems: 'center',
@@ -50,6 +49,7 @@ const styles = StyleSheet.create({
     height: 1,
     opacity: 0.4,
     marginLeft: 40,
+    marginVertical: 5,
   },
   iconContainer: {
     justifyContent: 'center',
@@ -57,6 +57,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
   },
   textContainer: {
+    // flex: 1,
     alignItems: 'center',
   },
   crossContainer: {
@@ -78,8 +79,16 @@ interface InfoProps {
         image: any[],
         ref: string[],
       };
-    screen: { width: number, height: number }
-}
+      screen: { width: number, height: number }
+    }
+
+const renderHelp = () => (
+  <View style={{ flex: 1 }}>
+    <Text style={{ opacity: 0.8, fontWeight: 'bold' }}>
+      You can edit below contents by clicking on them.
+    </Text>
+  </View>
+);
 
 const renderTagBox = (tagIDs, text) => (
   <View style={styles.tagContainer}>
@@ -109,9 +118,9 @@ const renderDateBox = (date) => {
 };
 
 const renderTextBox = (element) => (
-  <View>
+  <View style={{ flex: 1 }}>
     <Text
-      numberOfLines={2}
+      numberOfLines={4}
       ellipsizeMode="tail"
     >
       {element}
@@ -127,6 +136,7 @@ const renderDetails = (element, text, visible) => {
     ref,
   } = element;
   const segments = [
+    { icon: { collection: 'Ionicons', name: 'help-circle-outline' }, title: 'Help', content: renderHelp() },
     { icon: { collection: 'MaterialCommunityIcons', name: 'calendar-edit' }, title: 'Dates', content: renderDateBox(date) },
     { icon: { collection: 'Ionicons', name: 'pricetags-outline' }, title: 'Tag', content: renderTagBox(tagIDs, text) },
     { icon: { collection: 'Ionicons', name: 'at-outline' }, title: 'Ref', content: renderTextBox(ref) },
@@ -141,15 +151,15 @@ const renderDetails = (element, text, visible) => {
           <View key={segment.title}>
             <TouchableOpacity
               key={segment.title}
-              disabled={segment.title === 'Dates'}
+              disabled={segment.title === 'Dates' || segment.title === 'Help'}
               onPress={() => setIsPressed(!isPressed)}
-              style={{ height: (isPressed === true ? 100 : 30), justifyContent: (isPressed === false ? 'center' : null) }}
+              style={{ justifyContent: 'center' }}
             >
               <View style={styles.listcontainer}>
                 <View style={styles.iconContainer}>
                   <IconComponent
                     name={segment.icon.name}
-                    size={isPressed === true ? 30 : 20}
+                    size={20}
                     style={{ color: text }}
                   />
                 </View>
@@ -184,7 +194,7 @@ const Info = (props: InfoProps) => {
   const { element, theme: { colors: { text, content } }, screen } = props;
   const [visible, setVisible] = React.useState(false);
   return (
-    <View style={styles.container} onPress={() => setVisible(true)}>
+    <View style={styles.container}>
       <View style={[styles.listscontainer, { backgroundColor: content }]}>
         {renderDetails(element, text, visible)}
       </View>

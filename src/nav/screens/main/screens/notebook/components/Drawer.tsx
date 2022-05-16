@@ -4,6 +4,8 @@ import {
 } from 'react-native';
 import { withTheme } from 'react-native-paper';
 
+import { Theme } from 'src/interface';
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -22,9 +24,6 @@ const styles = StyleSheet.create({
   drawer: {
     position: 'absolute',
     height: '100%',
-    backgroundColor: '#fff',
-    justifyContent: 'center',
-    alignItems: 'center',
   },
 });
 
@@ -36,6 +35,7 @@ interface DrawerProps {
         height: number;
         width: number;
     };
+    theme: Theme
 }
 
 const Drawer = (props: DrawerProps) => {
@@ -44,6 +44,7 @@ const Drawer = (props: DrawerProps) => {
     mainComponent,
     drawerComponent,
     layout,
+    theme: { colors: { drawer } },
   } = props;
   const drawerWidthMax = 325;
   const drawerWidth = ((layout.width + drawerWidthMax)
@@ -64,7 +65,7 @@ const Drawer = (props: DrawerProps) => {
           <View style={styles.overlay} />
         </TouchableWithoutFeedback>
       ) : null}
-      <View style={[styles.drawer, { width: drawerWidth, right: isDrawerOpen ? 0 : -drawerWidth }]}>
+      <View style={[styles.drawer, { width: drawerWidth, right: isDrawerOpen ? 0 : -drawerWidth, backgroundColor: drawer }]}>
         {drawerComponent}
       </View>
     </View>

@@ -194,7 +194,8 @@ const Canvas = (props: CanvasProps) => {
         color={color}
         thickness={thickness}
         opacity={opacity}
-        height={isExpand ? screen.height - 44 : 400}
+        height={screen.height - 44}
+        // height={isExpand ? screen.height - 44 : 400}
         width={screen.width}
         tool={tool}
         simplifyOptions={{
