@@ -90,7 +90,12 @@ const renderColorPallate = (colorState, palleteVisibleState) => {
         </View>
         <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
           <Dialog.Actions>
-            <Button onPress={() => setPalleteVisible(false)} color={Color.blue[3]}>Cancel</Button>
+            <Button
+              onPress={() => setPalleteVisible(false)}
+              color={Color.blue[3]}
+            >
+              Cancel
+            </Button>
           </Dialog.Actions>
           <Dialog.Actions>
             <Button

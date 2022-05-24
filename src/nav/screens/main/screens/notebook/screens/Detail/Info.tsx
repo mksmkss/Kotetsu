@@ -2,7 +2,7 @@ import * as React from 'react';
 import { StyleSheet, View, TouchableOpacity } from 'react-native';
 
 import {
-  withTheme, Divider, Portal, Dialog,
+  withTheme, Divider, Portal, Dialog, TextInput, Button,
 } from 'react-native-paper';
 
 import { EPaper } from 'src/components';
@@ -79,12 +79,12 @@ interface InfoProps {
         image: any[],
         ref: string[],
       };
-      screen: { width: number, height: number }
+      drawerState: [boolean, (isOpen: boolean) => void];
     }
 
 const renderHelp = () => (
   <View style={{ flex: 1 }}>
-    <Text style={{ opacity: 0.8, fontWeight: 'bold' }}>
+    <Text style={{ opacity: 0.8, fontWeight: 'bold', fontSize: 16 }}>
       You can edit below contents by clicking on them.
     </Text>
   </View>
@@ -128,31 +128,54 @@ const renderTextBox = (element) => (
   </View>
 );
 
-const renderDetails = (element, text, visible) => {
+const renderDetails = (
+  element,
+  text,
+  editState,
+  typeState,
+  textState,
+) => {
   const {
     tagIDs,
     date,
     note,
     ref,
   } = element;
+  const [isEdit, setIsEdit] = editState;
+  const [tyoe, setType] = typeState;
+  const [textValue, setTextValue] = textState;
   const segments = [
-    { icon: { collection: 'Ionicons', name: 'help-circle-outline' }, title: 'Help', content: renderHelp() },
-    { icon: { collection: 'MaterialCommunityIcons', name: 'calendar-edit' }, title: 'Dates', content: renderDateBox(date) },
-    { icon: { collection: 'Ionicons', name: 'pricetags-outline' }, title: 'Tag', content: renderTagBox(tagIDs, text) },
-    { icon: { collection: 'Ionicons', name: 'at-outline' }, title: 'Ref', content: renderTextBox(ref) },
-    { icon: { collection: 'Ionicons', name: 'create-outline' }, title: 'Note', content: renderTextBox(note) },
+    {
+      icon: { collection: 'Ionicons', name: 'help-circle-outline' }, title: 'Help', content: renderHelp(),
+    },
+    {
+      icon: { collection: 'MaterialCommunityIcons', name: 'calendar-edit' }, title: 'Dates', content: renderDateBox(date),
+    },
+    {
+      icon: { collection: 'Ionicons', name: 'pricetags-outline' }, title: 'Tag', content: renderTagBox(tagIDs, text), element: null,
+    },
+    {
+      icon: { collection: 'Ionicons', name: 'at-outline' }, title: 'Ref', content: renderTextBox(ref), element: ref,
+    },
+    {
+      icon: { collection: 'Ionicons', name: 'create-outline' }, title: 'Note', content: renderTextBox(note), element: note,
+    },
   ];
   return (
     <View>
       {segments.map((segment, index) => {
         const IconComponent = Icon[segment.icon.collection];
-        const [isPressed, setIsPressed] = React.useState(false);
         return (
           <View key={segment.title}>
             <TouchableOpacity
               key={segment.title}
               disabled={segment.title === 'Dates' || segment.title === 'Help'}
-              onPress={() => setIsPressed(!isPressed)}
+              onPress={() => [
+                setIsEdit(true),
+                setType(segment.title),
+                setTextValue(segment.element), // Array['','','']
+              ]}
+              // onPress={() => segment.editState[1](!segment.editState[0])}
               style={{ justifyContent: 'center' }}
             >
               <View style={styles.listcontainer}>
@@ -174,31 +197,71 @@ const renderDetails = (element, text, visible) => {
   );
 };
 
-// const renderDialog = (visibleState, element, text) => {
-//   const [visible, setVisible] = visibleState;
-//   return (
-//     <Portal>
-//       <Dialog
-//         visible={visible}
-//         onDismiss={() => setVisible(false)}
-//       >
-//         <View>
-//           {renderDetails(element, text, visible)}
-//         </View>
-//       </Dialog>
-//     </Portal>
-//   );
-// };
+const renderEditDialog = (editState, typeState, textState) => {
+  const [isEdit, setIsEdit] = editState;
+  const [type, setType] = typeState;
+  const [textValue, setTextValue] = textState;
+
+  return (
+    <Portal>
+      <Dialog
+        visible={isEdit}
+        onDismiss={() => setIsEdit(false)}
+        style={{
+          paddingVertical: 30, paddingHorizontal: 100, maxWidth: 300, alignSelf: 'center', borderRadius: 10,
+        }}
+      >
+        <View>
+          <TextInput
+            value={textValue}
+            onChangeText={(text) => setTextValue(text)}
+            multiline
+          />
+          <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+            <Dialog.Actions>
+              <Button
+                onPress={() => setIsEdit(false)}
+                color={Color.blue[3]}
+              >
+                Cancel
+              </Button>
+            </Dialog.Actions>
+            <Dialog.Actions>
+              <Button
+                onPress={() => setIsEdit(false)}
+                color={Color.blue[3]}
+              >
+                Done
+              </Button>
+            </Dialog.Actions>
+          </View>
+        </View>
+      </Dialog>
+    </Portal>
+  );
+};
 
 const Info = (props: InfoProps) => {
-  const { element, theme: { colors: { text, content } }, screen } = props;
-  const [visible, setVisible] = React.useState(false);
+  const { element, theme: { colors: { text, content } }, drawerState } = props;
+  const [isEdit, setIsEdit] = React.useState(false);
+  const [type, setType] = React.useState('');
+  const [textValue, setTextValue] = React.useState('');
   return (
     <View style={styles.container}>
       <View style={[styles.listscontainer, { backgroundColor: content }]}>
-        {renderDetails(element, text, visible)}
+        {renderDetails(
+          element,
+          text,
+          [isEdit, setIsEdit],
+          [type, setType],
+          [textValue, setTextValue],
+        )}
+        {renderEditDialog(
+          [isEdit, setIsEdit],
+          [type, setType],
+          [textValue, setTextValue],
+        )}
       </View>
-      {/* {renderDialog([visible, setVisible], element, text)} */}
     </View>
   );
 };

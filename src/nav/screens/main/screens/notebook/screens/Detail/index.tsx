@@ -51,7 +51,13 @@ const Detail = (props: DetailProps) => {
       <Drawer
         isDrawerOpenState={[isDrawerOpen, (bool) => navigation.setParams({ isDrawerOpen: bool })]}
         layout={layout}
-        drawerComponent={<Info element={element} screen={layout} />}
+        drawerComponent={(
+          <Info
+            element={element}
+            screen={layout}
+            drawerState={[isDrawerOpen, (bool) => navigation.setParams({ isDrawerOpen: bool })]}
+          />
+      )}
         mainComponent={(
           <>
             <Canvas
