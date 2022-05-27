@@ -1,15 +1,18 @@
 import * as React from 'react';
-import { StyleSheet, View, TouchableOpacity } from 'react-native';
+import {
+  StyleSheet, View, TouchableOpacity, ScrollView,
+} from 'react-native';
 import { Canvas as CanvasOriginal, CanvasRef } from '@benjeau/react-native-draw';
 import {
   withTheme, Portal, Dialog, Button,
 } from 'react-native-paper';
 import ColorPicker from 'react-native-wheel-color-picker';
+import Swiper from 'react-native-swiper';
 
 import { Icon, IconProps } from 'src/components/Icon';
 import { EPaper } from 'src/components';
 import { Theme } from 'src/interface';
-import { Color } from 'src/config';
+import { Color, CFs } from 'src/config';
 
 const { Text } = EPaper;
 
@@ -35,6 +38,12 @@ const styles = StyleSheet.create({
     height: 24,
     width: 24,
     borderWidth: 1,
+  },
+  buttonpicker: {
+    flexDirection: 'row',
+    flex: 1,
+    flexWrap: 'wrap',
+    alignItems: 'center',
   },
 });
 
@@ -75,19 +84,39 @@ const renderColorPallate = (colorState, palleteVisibleState) => {
         visible={palleteVisible}
         onDismiss={() => [setColor(tempColor), setPalleteVisible(false)]}
         style={{
-          paddingVertical: 30, paddingHorizontal: 100, maxWidth: 300, alignSelf: 'center', borderRadius: 10,
+          borderRadius: 10, alignSelf: 'center', height: 380, width: 300,
         }}
 
       >
-        <View style={{
-          height: 200, width: 250, alignSelf: 'center', marginBottom: 80,
-        }}
-        >
-          <ColorPicker
-            color={tempColor}
-            onColorChange={setTempColor}
-          />
-        </View>
+        <Swiper style={{}}>
+          <View style={{
+            margin: 20, alignSelf: 'center', flex: 1, backgroundColor: 'red', paddingBottom: 20,
+          }}
+          >
+            <ColorPicker
+              color={tempColor}
+              onColorChange={setTempColor}
+            />
+          </View>
+          <View style={styles.buttonpicker}>
+            {Object.keys(Color.picker).map((color, index) => (
+              <TouchableOpacity
+                key={color}
+                onPress={() => {
+                  setColor(Color.picker[color]);
+                  setPalleteVisible(false);
+                }}
+                style={{
+                  backgroundColor: Color.picker[color],
+                  width: 20,
+                  height: 20,
+                  borderRadius: 10,
+                  margin: 5,
+                }}
+              />
+            ))}
+          </View>
+        </Swiper>
         <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
           <Dialog.Actions>
             <Button

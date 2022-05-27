@@ -1,5 +1,7 @@
 import * as React from 'react';
-import { StyleSheet, View, TouchableOpacity } from 'react-native';
+import {
+  StyleSheet, View, TouchableOpacity, KeyboardAvoidingView,
+} from 'react-native';
 
 import {
   withTheme, Divider, Portal, Dialog, TextInput, Button,
@@ -120,7 +122,7 @@ const renderDateBox = (date) => {
 const renderTextBox = (element) => (
   <View style={{ flex: 1 }}>
     <Text
-      numberOfLines={4}
+      numberOfLines={8}
       ellipsizeMode="tail"
     >
       {element}
@@ -132,7 +134,7 @@ const renderDetails = (
   element,
   text,
   editState,
-  typeState,
+  basicdataState,
   textState,
 ) => {
   const {
@@ -142,7 +144,7 @@ const renderDetails = (
     ref,
   } = element;
   const [isEdit, setIsEdit] = editState;
-  const [tyoe, setType] = typeState;
+  const [basicdata, setBasicData] = basicdataState;
   const [textValue, setTextValue] = textState;
   const segments = [
     {
@@ -172,10 +174,9 @@ const renderDetails = (
               disabled={segment.title === 'Dates' || segment.title === 'Help'}
               onPress={() => [
                 setIsEdit(true),
-                setType(segment.title),
-                setTextValue(segment.element), // Array['','','']
+                setBasicData([segment.icon.collection, segment.icon.name, segment.title]),
+                setTextValue(segment.element.toString()), // Array['','','']
               ]}
-              // onPress={() => segment.editState[1](!segment.editState[0])}
               style={{ justifyContent: 'center' }}
             >
               <View style={styles.listcontainer}>
@@ -197,27 +198,39 @@ const renderDetails = (
   );
 };
 
-const renderEditDialog = (editState, typeState, textState) => {
+const renderEditDialog = (text, editState, basicdataState, textState) => {
   const [isEdit, setIsEdit] = editState;
-  const [type, setType] = typeState;
+  const [basicdata, setBasicData] = basicdataState;
   const [textValue, setTextValue] = textState;
-
   return (
     <Portal>
       <Dialog
         visible={isEdit}
         onDismiss={() => setIsEdit(false)}
         style={{
-          paddingVertical: 30, paddingHorizontal: 100, maxWidth: 300, alignSelf: 'center', borderRadius: 10,
+          maxHeight: 300, maxWidth: 500, paddingHorizontal: 30, alignSelf: 'center', borderRadius: 10,
         }}
       >
         <View>
-          <TextInput
-            value={textValue}
-            onChangeText={(text) => setTextValue(text)}
-            multiline
-          />
-          <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+          <View style={{ alignSelf: 'center', margin: 10, flexDirection: 'row' }}>
+            <View>
+              <Text style={{ fontSize: 20, fontWeight: 'bold' }}>{basicdata[2]}</Text>
+            </View>
+          </View>
+          <View style={{ flex: 1 }}>
+            <TextInput
+              value={textValue}
+              onChangeText={(text) => setTextValue(text)}
+              multiline
+              dense
+              style={{ flex: 1 }}
+              theme={{ colors: { text } }}
+            />
+          </View>
+          <View style={{
+            flexDirection: 'row', justifyContent: 'center', alignSelf: 'center',
+          }}
+          >
             <Dialog.Actions>
               <Button
                 onPress={() => setIsEdit(false)}
@@ -244,7 +257,7 @@ const renderEditDialog = (editState, typeState, textState) => {
 const Info = (props: InfoProps) => {
   const { element, theme: { colors: { text, content } }, drawerState } = props;
   const [isEdit, setIsEdit] = React.useState(false);
-  const [type, setType] = React.useState('');
+  const [basicdata, setBasicData] = React.useState(['', '', '']);
   const [textValue, setTextValue] = React.useState('');
   return (
     <View style={styles.container}>
@@ -253,12 +266,13 @@ const Info = (props: InfoProps) => {
           element,
           text,
           [isEdit, setIsEdit],
-          [type, setType],
+          [basicdata, setBasicData],
           [textValue, setTextValue],
         )}
         {renderEditDialog(
+          text,
           [isEdit, setIsEdit],
-          [type, setType],
+          [basicdata, setBasicData],
           [textValue, setTextValue],
         )}
       </View>
