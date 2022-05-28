@@ -65,7 +65,11 @@ const Drawer = (props: DrawerProps) => {
           <View style={styles.overlay} />
         </TouchableWithoutFeedback>
       ) : null}
-      <View style={[styles.drawer, { width: drawerWidth, right: isDrawerOpen ? 0 : -drawerWidth, backgroundColor: drawer }]}>
+      <View style={[
+        styles.drawer,
+        { width: drawerWidth, right: isDrawerOpen ? 0 : -drawerWidth, backgroundColor: drawer },
+      ]}
+      >
         {drawerComponent}
       </View>
     </View>

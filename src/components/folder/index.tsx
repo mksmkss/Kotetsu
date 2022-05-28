@@ -19,15 +19,15 @@ const styles = StyleSheet.create({
   eachFile: {
     alignItems: 'center',
     padding: 10,
-    borderWidth: 0,
+    // borderWidth: 0.5,
   },
   file: {
   },
   titleContainer: {
-    alignSelf: 'center',
   },
   title: {
     fontSize: 15,
+    alignSelf: 'center',
   },
 });
 
@@ -37,11 +37,12 @@ interface FolderProps {
     textStyle?: TextStyle;
     iconStyle?: TextStyle;
     style?: ViewStyle;
+    folderWidth: number;
 }
 
 const Folder = (props: FolderProps) => {
   const {
-    onPress, title, textStyle, iconStyle, style,
+    onPress, title, textStyle, iconStyle, style, folderWidth,
   } = props;
 
   return (
@@ -53,11 +54,11 @@ const Folder = (props: FolderProps) => {
         <Icon.MaterialCommunityIcons
           name="folder"
           color="skyblue"
-          size={120}
+          size={folderWidth - 20}
           style={iconStyle}
         />
-        <View style={styles.titleContainer}>
-          <Text style={[styles.title, textStyle]}>{title}</Text>
+        <View style={[styles.titleContainer, { width: folderWidth - 20 }]}>
+          <Text style={[styles.title, textStyle]} numberOfLines={1}>{title}</Text>
         </View>
       </TouchableOpacity>
     </View>

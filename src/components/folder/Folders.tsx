@@ -13,7 +13,8 @@ const styles = StyleSheet.create({
   files: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    marginHorizontal: 20,
+    // borderWidth: 0.5,
+    // marginHorizontal: 20,
   },
 });
 
@@ -26,18 +27,25 @@ interface FoldersProps {
       }
   },
   onPressCreator: (id: string) => onPressFunc,
+  screenWidth: number
 }
 
-const Folders = (props: FoldersProps = { contents: {}, onPressCreator: () => console.log('aiueo') }) => {
-  const { contents, onPressCreator } = props;
+const Folders = (props: FoldersProps = { contents: {}, onPressCreator: () => console.log('aiueo'), screenWidth: 1 }) => {
+  const { contents, onPressCreator, screenWidth } = props;
   const contentIDs = Object.keys(contents);
+  const folderWidth = screenWidth / Math.ceil(screenWidth / 150);
   return (
     <View style={{ flex: 1 }}>
       {contentIDs.length !== 0
         ? (
           <View style={styles.files}>
             {contentIDs.map((id) => (
-              <Folder key={id} onPress={onPressCreator(id)} title={contents[id].name} />
+              <Folder
+                key={id}
+                onPress={onPressCreator(id)}
+                title={contents[id].name}
+                folderWidth={folderWidth}
+              />
             ))}
           </View>
         ) : <NullScreen />}

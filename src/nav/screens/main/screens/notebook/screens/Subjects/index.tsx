@@ -26,16 +26,21 @@ const styles = StyleSheet.create({
 });
 
 type NavigationProps = NativeStackScreenProps<ParamList, 'Subjects'>
-interface SubjectsProps extends NavigationProps {}
+interface SubjectsProps extends NavigationProps { }
 
 const Subjects = (props: SubjectsProps) => {
   const subjects = testdata.subject; // 後々subjectsをfirebaseで取ってくるように変える
+  const [screenWidth, setScreenWidth] = React.useState(1);
   const { navigation } = props;
   return (
-    <View style={styles.container}>
+    <View
+      style={styles.container}
+      onLayout={({ nativeEvent }) => setScreenWidth(nativeEvent.layout.width)}
+    >
       <Buttons />
       <Folders
         contents={subjects}
+        screenWidth={screenWidth}
         onPressCreator={(id) => {
           const navigationFunc = () => navigation.navigate('Units', {
             name: subjects[id].name,

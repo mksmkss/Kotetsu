@@ -18,17 +18,13 @@ const { Text } = EPaper;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // backgroundColor: 'red',
   },
   listscontainer: {
-    // margin: 10,
-    // borderRadius: 10,
     paddingVertical: 5,
   },
   listcontainer: {
     alignItems: 'center',
     flexDirection: 'row',
-    // borderWidth: 1,
   },
   tagContainer: {
     flexDirection: 'row',
@@ -36,7 +32,6 @@ const styles = StyleSheet.create({
   },
   tag: {
     alignItems: 'center',
-    // backgroundColor: Color.grey[8],
     borderWidth: 1,
     borderColor: Color.grey[4],
     flexDirection: 'row',
@@ -59,11 +54,9 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
   },
   textContainer: {
-    // flex: 1,
     alignItems: 'center',
   },
   crossContainer: {
-    // borderWidth: 1,
   },
 });
 

@@ -39,11 +39,36 @@ const styles = StyleSheet.create({
     width: 24,
     borderWidth: 1,
   },
-  buttonpicker: {
+  switchComponent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 10,
+    marginRight: 20,
+    justifyContent: 'flex-end',
+  },
+  switchButton: {
+    marginHorizontal: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 15,
+    height: 30,
+    width: 30,
+    // padding: 5,
+  },
+  buttonsPicker: {
     flexDirection: 'row',
     flex: 1,
     flexWrap: 'wrap',
     alignItems: 'center',
+    marginHorizontal: 20,
+    // backgroundColor: '#fff',
+  },
+  wheelPicker: {
+    marginHorizontal: 20,
+    alignSelf: 'center',
+    flex: 1,
+    // backgroundColor: 'red',
+    paddingBottom: 20,
   },
 });
 
@@ -71,11 +96,11 @@ interface ButtonType {
   iconStyle?: IconProps['style']
 }
 
-const renderColorPallate = (colorState, palleteVisibleState) => {
+const renderColorPallate = (colorState, palleteVisibleState, textcolor) => {
   const [color, setColor] = colorState;
   const [tempColor, setTempColor] = React.useState('#ffffff');
   const [palleteVisible, setPalleteVisible] = palleteVisibleState;
-
+  const [palette, setPalette] = React.useState(0);
   React.useEffect(() => setTempColor(color), [palleteVisible]);
 
   return (
@@ -88,35 +113,52 @@ const renderColorPallate = (colorState, palleteVisibleState) => {
         }}
 
       >
-        <Swiper style={{}}>
-          <View style={{
-            margin: 20, alignSelf: 'center', flex: 1, backgroundColor: 'red', paddingBottom: 20,
-          }}
+        <View style={styles.switchComponent}>
+          <TouchableOpacity
+            style={[
+              styles.switchButton,
+              { backgroundColor: palette === 0 ? Color.grey[4] : null }]}
+            onPress={() => setPalette(0)}
           >
+            <Icon.Ionicons name="disc-sharp" size={20} style={{ color: textcolor }} />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              styles.switchButton,
+              { backgroundColor: palette === 1 ? Color.grey[4] : null }]}
+            onPress={() => setPalette(1)}
+          >
+            <Icon.Ionicons name="ios-apps" size={20} style={{ color: textcolor }} />
+          </TouchableOpacity>
+        </View>
+        { palette === 0 ? (
+          <View style={styles.wheelPicker}>
             <ColorPicker
               color={tempColor}
               onColorChange={setTempColor}
             />
           </View>
-          <View style={styles.buttonpicker}>
-            {Object.keys(Color.picker).map((color, index) => (
-              <TouchableOpacity
-                key={color}
-                onPress={() => {
-                  setColor(Color.picker[color]);
-                  setPalleteVisible(false);
-                }}
-                style={{
-                  backgroundColor: Color.picker[color],
-                  width: 20,
-                  height: 20,
-                  borderRadius: 10,
-                  margin: 5,
-                }}
-              />
-            ))}
-          </View>
-        </Swiper>
+        )
+          : (
+            <View style={styles.buttonsPicker}>
+              {Object.keys(Color.picker).map((key, index) => (
+                <TouchableOpacity
+                  key={key}
+                  onPress={() => {
+                    setColor(Color.picker[color]);
+                    setPalleteVisible(false);
+                  }}
+                  style={{
+                    backgroundColor: Color.picker[color],
+                    width: 20,
+                    height: 20,
+                    borderRadius: 10,
+                    margin: 5,
+                  }}
+                />
+              ))}
+            </View>
+          )}
         <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
           <Dialog.Actions>
             <Button
@@ -142,7 +184,14 @@ const renderColorPallate = (colorState, palleteVisibleState) => {
 
 const ToolBar = (props: ToolBarProps) => {
   const {
-    textcolor, toolState, colorState, thicknessState, opacityState, expandState, undo, clear,
+    textcolor,
+    toolState,
+    colorState,
+    thicknessState,
+    opacityState,
+    expandState,
+    undo,
+    clear,
   } = props;
   const [mode, setMode] = React.useState('pen');
   const [palleteVisible, setPalleteVisible] = React.useState(false);
@@ -206,7 +255,7 @@ const ToolBar = (props: ToolBarProps) => {
           </TouchableOpacity>
         );
       })}
-      {renderColorPallate(colorState, [palleteVisible, setPalleteVisible])}
+      {renderColorPallate(colorState, [palleteVisible, setPalleteVisible], textcolor)}
     </View>
   );
 };
